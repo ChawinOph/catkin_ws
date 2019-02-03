@@ -19,10 +19,18 @@ if __name__ == '__main__':
     turtle_vel = rospy.Publisher('turtle2/cmd_vel', geometry_msgs.msg.Twist,queue_size=1)
 
     rate = rospy.Rate(10.0)
+    # The first waitForTransform() will wait until the /turtle2 frame is 
+    # broadcast on tf before trying to waitForTransform() at time now.
+    listener.waitForTransform("/turtle2", "/carrot1", rospy.Time(), rospy.Duration(4.0))
     while not rospy.is_shutdown():
         try:
-            (trans,rot) = listener.lookupTransform('/turtle2', '/carrot1', rospy.Time(0))
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+            now = rospy.Time.now()
+            # (trans,rot) = listener.lookupTransform('/turtle2', '/carrot1', rospy.Time(0))
+            # add the waiting time
+            listener.waitForTransform("/turtle2", "/carrot1", now, rospy.Duration(4.0))
+            (trans,rot) = listener.lookupTransform('/turtle2', '/carrot1', now)
+        # except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+        except (tf.LookupException, tf.ConnectivityException):
             continue
 
         angular = 4 * math.atan2(trans[1], trans[0])

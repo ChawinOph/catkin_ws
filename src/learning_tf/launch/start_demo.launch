@@ -12,6 +12,6 @@
     <node pkg="learning_tf" type="turtle_tf_listener.py" 
           name="listener" />
     <node pkg="learning_tf" type="dynamic_tf_broadcaster.py"
-          name="broadcaster_fixed" />
+          name="broadcaster_dynamics" />
 
   </launch>
